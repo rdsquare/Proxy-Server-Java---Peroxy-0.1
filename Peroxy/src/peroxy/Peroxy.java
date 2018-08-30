@@ -244,7 +244,7 @@ public class Peroxy extends Thread{
                 cIP.replace(".", "0") + "/" +
                 tempString+
                 Integer.toString(now.getMinute())+ ".txt";
-        logFileName = ".logManager/"+logFileName;
+        logFileName = "logManager/"+logFileName;
         File logFile = new File(logFileName);
         //dateTime - timeStamp
         //Ip -client cIP
@@ -541,7 +541,7 @@ public class Peroxy extends Thread{
             
             try {
                 // Create file to cache
-                fileToCache = new File(".cacheManager/cached/"+fileName);
+                fileToCache = new File("cacheManager/cached/"+fileName);
                 
                 if(!fileToCache.exists()) {
                     PeroxyInterface.SIGNALMESSAGE += "Creating cache file in Cache Manager...<br>";

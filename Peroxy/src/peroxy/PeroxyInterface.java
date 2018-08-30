@@ -159,7 +159,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         //configuring cache and log file
         try {
             //loading previously cached web pages
-            File cachedSites = new File(".cacheManager/cachedSites.txt");
+            File cachedSites = new File("cacheManager/cachedSites.txt");
             if(!cachedSites.exists()) {
                 handleTerminal("No caching file found - Making new caching file...");
                 cachedSites.getParentFile().mkdirs(); //making directories of the file
@@ -180,7 +180,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         
         try {
             //loading previously blocked clients
-            File bClientsFile = new File(".blocking/blockedClients.txt");
+            File bClientsFile = new File("blocking/blockedClients.txt");
             if(!bClientsFile.exists()) {
                 handleTerminal("No client blocking file found - Making new blocking file...");
                 bClientsFile.getParentFile().mkdirs();
@@ -201,7 +201,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         
         try {
             //loading previously blocked websites
-            File bWebsitesFile = new File(".blocking/blockedWebsites.txt");
+            File bWebsitesFile = new File("blocking/blockedWebsites.txt");
             if(!bWebsitesFile.exists()) {
                 handleTerminal("No website blocking file found - Making new blocking file...");
                 bWebsitesFile.getParentFile().mkdirs();
@@ -221,7 +221,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         
         try {
             //loading previous logs of clients
-            File logManagerFile = new File(".logManager/logFiles.txt");
+            File logManagerFile = new File("logManager/logFiles.txt");
             if(!logManagerFile.exists()) {
                 handleTerminal("No log file found - Making new log file...");
                 logManagerFile.getParentFile().mkdirs();
@@ -425,7 +425,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
     private void saveFileManager() {
         //saving cached sites information to file....
         try {
-            File cachedSitesFile = new File(".cacheManager/cachedSites.txt");
+            File cachedSitesFile = new File("cacheManager/cachedSites.txt");
             FileOutputStream fos = new FileOutputStream(cachedSitesFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(cPagesMap);
@@ -437,7 +437,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         
         //saving blocked clients information to file...
         try {
-            File blockedClientsFile = new File(".blocking/blockedClients.txt");
+            File blockedClientsFile = new File("blocking/blockedClients.txt");
             FileOutputStream fos = new FileOutputStream(blockedClientsFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(bClientsMap);
@@ -449,7 +449,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         
         //saving blocked websites information to file...
         try {
-            File blockedWebsitesFile = new File(".blocking/blockedWebsites.txt");
+            File blockedWebsitesFile = new File("blocking/blockedWebsites.txt");
             FileOutputStream fos = new FileOutputStream(blockedWebsitesFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(bWebsitesMap);
@@ -461,7 +461,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         
         //saving client log information to file....
         try {
-            File clientLogFiles = new File(".logManager/logFiles.txt");
+            File clientLogFiles = new File("logManager/logFiles.txt");
             FileOutputStream fos = new FileOutputStream(clientLogFiles);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(logManagerMap);
@@ -551,7 +551,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
      * It will delete files on recurssive nature
      */
     public static void delCache(String fileName) {
-        if(fileName == ".cacheManager/"){
+        if(fileName == "cacheManager/"){
             int status = JOptionPane.showOptionDialog(null, 
                     "<html><h3>Delete Cache?<h3><p>Are your sure! You want o delete cache of server.<br>"
                             + "Cache improves server's searching time and reliability.<br>You will be messaged when cache get deleted.</p></html>",
@@ -587,7 +587,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
         }
         cPagesMap = new HashMap<>();
         
-        if(fileName == ".cacheManager/"){
+        if(fileName == "cacheManager/"){
             JOptionPane.showMessageDialog(null, 
                 "<html><h3>Cache Deleted!</h3><p>Server's cache has been deleted!</p></html>",
                 "Cache Deleted! - " + PeroxyInterface.APPNAME,
@@ -1533,7 +1533,7 @@ public class PeroxyInterface extends JFrame implements Runnable {
 
     private void tCacheButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCacheButtonActionPerformed
         // delete whole cache manager files
-        delCache(".cacheManager/");
+        delCache("cacheManager/");
     }//GEN-LAST:event_tCacheButtonActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
