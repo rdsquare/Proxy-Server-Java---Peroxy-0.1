@@ -146,7 +146,13 @@ public class Peroxy extends Thread{
         //Parse URL
         PeroxyInterface.SIGNALMESSAGE += "Request Received: " + requestString+ "<br>";
         
-        String tokens[] = requestString.split("\\s+");
+        String tokens[] = new String[3];
+        try {
+            tokens = requestString.split("\\s+");
+        } catch (Exception e) {
+            PeroxyInterface.SIGNALMESSAGE += "Error occurred while fatching request.<br>";
+            return;
+        }
         
         /**
          * If URL String is not http requested then make it http request
@@ -244,7 +250,7 @@ public class Peroxy extends Thread{
                 cIP.replace(".", "0") + "/" +
                 tempString+
                 Integer.toString(now.getMinute())+ ".txt";
-        logFileName = "logManager/"+logFileName;
+        logFileName = ".logManager/"+logFileName;
         File logFile = new File(logFileName);
         //dateTime - timeStamp
         //Ip -client cIP
@@ -298,9 +304,14 @@ public class Peroxy extends Thread{
     
     private void blockedSiteRequested(String website) {
         PeroxyInterface.SIGNALMESSAGE += "Blocked site requested : "+website+"<br>";
-        String response = "HTTP/1.0 403 Access Forbidden \n"+
-                "User-Agent: " + PeroxyInterface.APPNAME+ "\n"+
-                "\r\n";
+        String response = "HTTP/1.0 403 Forbidden \r\n"+
+                "User-Agent: " + PeroxyInterface.APPNAME+ "\r\n"+
+                "\r\n<html><head><title>Access Denied!</title><body>"
+                + "<center><h3>Access Denied to " + website+ "</h3><p>"
+                + "This is message from the " + PeroxyInterface.APPNAME + "(Proxy Server)."
+                + "This website is blocked and attempting to access this can be a criminal offense."
+                + "The authority can take any legal action to you if you try this again</p></center>"
+                + "</body></html>";
         //System.out.println("Blocked site requested..." + website);
         System.out.println("\n");
         try {
@@ -319,9 +330,14 @@ public class Peroxy extends Thread{
     
     private void blockedClientRequesting(String client) {
         PeroxyInterface.SIGNALMESSAGE += "Blocked client requesting : "+client+"<br>";
-        String response = "HTTP/1.0 403 Access Forbidden \n"+
-                "User-Agent: " + PeroxyInterface.APPNAME+ "\n"+
-                "\r\n";
+        String response = "HTTP/1.0 403 Access Forbidden \r\n"+
+                "User-Agent: " + PeroxyInterface.APPNAME+ "\r\n"+
+                "\r\n<html><head><title>Access Denied!</title><body>"
+                + "<center><h3>Access Denied to " + client+ "</h3><p>"
+                + "This is message from the " + PeroxyInterface.APPNAME + "(Proxy Server)."
+                + "You are blocked to access the content from the proxy server so do not try this again."
+                + "The authority can take any legal action to you if you try this again</p></center>"
+                + "</body></html>";
         try {
             toClientBw.write(response);
             toClientBw.flush();
@@ -348,7 +364,7 @@ public class Peroxy extends Thread{
             ptsSocket.setSoTimeout(5000);
             
             //Send connection established response to client
-            String response = "HTTP/1.0 200 Connection established\r\n"+
+            String response = "HTTP/1.0 200 Connection Established\r\n"+
                     "Proxy-Agent: "+PeroxyInterface.APPNAME+ "\r\n"+
                     "\r\n";
             toClientBw.write(response);
@@ -385,9 +401,15 @@ public class Peroxy extends Thread{
                 } while (read >= 0);
             } catch (SocketTimeoutException e) {
                 PeroxyInterface.SIGNALMESSAGE +=  e.toString()+"<br>";
-                String error = "HTTP/1.0 504 Timeout Occured after 50s\n"+
-                        "User-Agent: "+ PeroxyInterface.APPNAME + "\n"+
-                        "\r\n";
+                String error = "HTTP/1.0 504 Timeout Occured after 50s\r\n"+
+                        "User-Agent: "+ PeroxyInterface.APPNAME + "\r\n"+
+                        "\r\n"
+                        + "<html<head><title>Timeout</title></head><body>"
+                        + "<center><h3>Timeout Error in Peroxy(proxy server)</h3><p>"
+                + "This is message from the " + PeroxyInterface.APPNAME + "(Proxy Server)."
+                + "Your request has been timeout due to some errors."
+                + "Try this again after some time!</p></center>"
+                + "</body></html>";
                 try {
                     toClientBw.write(error);
                     toClientBw.flush();
@@ -417,9 +439,15 @@ public class Peroxy extends Thread{
             
         } catch (SocketTimeoutException e) {
             PeroxyInterface.SIGNALMESSAGE += e.toString()+"<br>";
-            String response = "HTTP/1.0 504 Timeout Occured after 50s\n"+
-                    "User-Agent: "+ PeroxyInterface.APPNAME + "\n"+
-                    "\r\n";
+            String response = "HTTP/1.0 504 Timeout Occured after 50s\r\n"+
+                        "User-Agent: "+ PeroxyInterface.APPNAME + "\r\n"+
+                        "\r\n"
+                        + "<html<head><title>Timeout</title></head><body>"
+                        + "<center><h3>Timeout Error in Peroxy(proxy server)</h3><p>"
+                + "This is message from the " + PeroxyInterface.APPNAME + "(Proxy Server)."
+                + "Your request has been timeout due to some errors."
+                + "Try this again after some time!</p></center>"
+                + "</body></html>";
             try {
                 toClientBw.write(response);
                 toClientBw.flush();
@@ -453,8 +481,14 @@ public class Peroxy extends Thread{
                 if(image == null){
                     PeroxyInterface.SIGNALMESSAGE += "Image "+file.getName() + " was null.<br>";
                     response = "HTTP/1.0 404 NOT FOUND \n"+
-                            "Proxy-agent: " + PeroxyInterface.APPNAME+"\n"+
-                            "\r\n";
+                            "User-Agent: "+ PeroxyInterface.APPNAME + "\r\n"+
+                        "\r\n"
+                        + "<html<head><title>404 Page Not Found</title></head><body>"
+                        + "<center><h3>404 Webpage Not Found</h3><p>"
+                + "This is message from the " + PeroxyInterface.APPNAME + "(Proxy Server)."
+                + "Your requested page is not found on internet."
+                + "Try with different name.</p></center>"
+                + "</body></html>";
                     toClientBw.write(response);
                     toClientBw.flush();
                 } else {
@@ -541,7 +575,7 @@ public class Peroxy extends Thread{
             
             try {
                 // Create file to cache
-                fileToCache = new File("cacheManager/cached/"+fileName);
+                fileToCache = new File(".cacheManager/cached/"+fileName);
                 
                 if(!fileToCache.exists()) {
                     PeroxyInterface.SIGNALMESSAGE += "Creating cache file in Cache Manager...<br>";
@@ -581,9 +615,15 @@ public class Peroxy extends Thread{
                     //No image received from server
                     PeroxyInterface.SIGNALMESSAGE += "<br>Sending 404 to client as image was not received from server: " + fileName;
                     
-                    String response = "HTTP/1.0 404 NOT FOUND\n"+
-                            "Proxy-agent: "+ PeroxyInterface.APPNAME+"\n"+
-                            "\r\n";
+                    String response = "HTTP/1.0 404 NOT FOUND \n"+
+                            "User-Agent: "+ PeroxyInterface.APPNAME + "\r\n"+
+                        "\r\n"
+                        + "<html<head><title>404 Page Not Found</title></head><body>"
+                        + "<center><h3>404 Webpage Not Found</h3><p>"
+                + "This is message from the " + PeroxyInterface.APPNAME + "(Proxy Server)."
+                + "Your requested page is not found on internet."
+                + "Try with different name.</p></center>"
+                + "</body></html>";
                     
                     fileToCacheBw.write(response);
                     fileToCacheBw.flush();
